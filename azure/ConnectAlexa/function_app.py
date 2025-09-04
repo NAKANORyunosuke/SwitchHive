@@ -87,14 +87,19 @@ def alexa(req: func.HttpRequest) -> func.HttpResponse:
 
     elif req_type == "IntentRequest":
         intent = (request.get("intent") or {}).get("name", "UnknownIntent")
-        text = f"インテント {intent} を受け取りました。"
+        if intent == "SendMessage":
+            text = request.get("intent", {}).get("slots", {}).get(
+                "message", {}).get("slotValue", {}).get("value")
+        elif intent == "SendText":
+            text = request.get("intent", {}).get("slots", {}).get(
+                "text", {}).get("slotValue", {}).get("value")
+
         should_end = True
 
-        # --- 任意: Alexa → LINE へ Push（DEVELOPER_ID が U... のときのみ）
         if DEVELOPER_ID and DEVELOPER_ID.startswith(("U", "R", "C")):
             try:
                 line_push(DEVELOPER_ID, [
-                          build_text(f"Alexa intent: {intent}")])
+                    build_text(text)])
             except Exception as e:
                 logging.exception(f"LINE push error: {e}")
         else:
@@ -117,7 +122,7 @@ def alexa(req: func.HttpRequest) -> func.HttpResponse:
         mimetype="application/json",
     )
 
-# ===== LINE Webhook endpoint =====
+    # ===== LINE Webhook endpoint =====
 
 
 @app.function_name(name="LineWebhook")
