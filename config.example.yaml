@@ -1,0 +1,51 @@
+camera:
+  source: "0" # "0" | "rtsp://..." | "/path/to/file"
+  width: 1280
+  height: 720
+  fps: 30
+  inference_fps: 12
+  camera_id: "cam05"
+
+model:
+  backend: "mediapipe" # implemented: "mediapipe"; stubs: "tflite", "onnx", "opencv-dnn"
+  model_path: "" # unused for mediapipe
+  num_threads: 2
+
+detection:
+  min_conf_joints: 8
+  angle_deg_th: 55
+  ratio_th: 0.6
+  T_pose_sec: 0.5
+  hip_drop_px_th: 40
+  T_drop_sec: 0.4
+  T_still_sec: 1.0
+  v_still_px_per_frame: 0.5
+  min_person_height_px: 120
+  cooldown_sec: 5
+  C_grace_sec: 0.6   # Allow extra time after A∧B to observe stillness
+
+saver:
+  base_dir: "./falls"
+  save_annotated: true
+  save_raw: false
+  pre_seconds: 2
+  post_seconds: 3
+  image_format: "jpg"
+  jpeg_quality: 90
+  video_clip:
+    enabled: true
+    fps: 30
+    max_seconds: 6
+    codec: "mp4v"
+
+privacy:
+  face_blur: true
+  blur_kernel: 31
+  encrypt_at_rest: false
+  retention_days: 30
+  redact_metadata: true
+
+logging:
+  level: "INFO"
+  file: ""
+  export_prometheus: false

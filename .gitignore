@@ -1,3 +1,11 @@
 .venv
 azure/ConnectAlexa/packages-microsoft-prod.deb
 20250904.md
+memo.txt
+run.bat
+falls/
+config.yaml
+_pycache__/
+__pycache__/
+*.pyc
+log/
